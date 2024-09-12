@@ -1,13 +1,35 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { useNavigate, NavLink } from 'react-router-dom'
+import axios from 'axios'
 
 const Otp = () => {
-  const [otp, setOtp] = useState('')
-  
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Handle OTP submission logic here
-    console.log('OTP submitted:', otp)
+  const [otp, setOtp] = useState('');
+  const [email, setEmail] = useState('');
+  const baseURL = import.meta.env.VITE_BACKEND_URL;
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('OTP and email submitted:', otp, email);
+
+    try {
+      const response = await axios.post(`${baseURL}/api/user/verify-otp`, {
+        email,
+        otp
+      });
+
+      console.log("Response from OTP verification:", response.data);
+
+      // Check if the response status is true and navigate to the login page
+      if(response.data.status) {
+        console.log("OTP verified successfully, navigating to login page");
+        navigate('/login'); // Navigate to the login page
+      } else {
+        console.log("OTP verification failed:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error.response?.data?.message || error.message);
+    }
   }
 
   return (
@@ -15,7 +37,22 @@ const Otp = () => {
       <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-[#5E5E5E] text-sm shadow-lg'>
         <p className='text-2xl font-semibold'>OTP Verification</p>
         <p>Please enter the OTP sent to your registered email.</p>
-        <div className='w-full '>
+
+        {/* Email field */}
+        <div className='w-full'>
+          <p>Email</p>
+          <input 
+            onChange={(e) => setEmail(e.target.value)} 
+            value={email} 
+            className='border border-[#DADADA] rounded w-full p-2 mt-1' 
+            type="email" 
+            required 
+            placeholder="Enter your email"
+          />
+        </div>
+
+        {/* OTP field */}
+        <div className='w-full'>
           <p>OTP</p>
           <input 
             onChange={(e) => setOtp(e.target.value)} 
@@ -23,14 +60,66 @@ const Otp = () => {
             className='border border-[#DADADA] rounded w-full p-2 mt-1' 
             type="text" 
             required 
-            maxLength="6" // Assuming OTP is 6 digits
+            maxLength="6" 
+            placeholder="Enter the 6-digit OTP"
           />
         </div>
-        <button className='bg-primary text-white w-full py-2 my-2 rounded-md text-base'>Verify OTP</button>
-        <NavLink to='/login' >Back to login <span className='text-primary underline cursor-pointer'>Click here</span></NavLink>
+
+        {/* Submit button */}
+        <button type='submit' className='bg-primary text-white w-full py-2 my-2 rounded-md text-base'>
+          Verify OTP
+        </button>
+
+        {/* Back to login link */}
+        <NavLink to='/login'>
+          Back to login <span className='text-primary underline cursor-pointer'>Click here</span>
+        </NavLink>
       </div>
     </form>
   )
 }
 
-export default Otp
+export default Otp;
+
+
+// import React, { useState } from 'react'
+// import { NavLink } from 'react-router-dom'
+// import axios from 'axios'
+// const Otp = () => {
+//   const [otp, setOtp] = useState('')
+//   const baseURL= import.meta.env.VITE_BACKEND_URL
+
+//   const handleSubmit =async  (e) => {
+//     e.preventDefault()
+//     console.log('OTP submitted:', otp)
+//     const response = await axios.post(`${baseURL}/api/user/verify-otp`, {
+//         otp
+//       });
+
+//       console.log("res otp",response)
+//   }
+
+//   return (
+//     <form className='min-h-[80vh] flex items-center' onSubmit={handleSubmit}>
+//       <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-[#5E5E5E] text-sm shadow-lg'>
+//         <p className='text-2xl font-semibold'>OTP Verification</p>
+//         <p>Please enter the OTP sent to your registered email.</p>
+//         <div className='w-full '>
+//           <p>OTP</p>
+//           <input 
+//             onChange={(e) => setOtp(e.target.value)} 
+//             value={otp} 
+//             className='border border-[#DADADA] rounded w-full p-2 mt-1' 
+//             type="text" 
+//             required 
+//             maxLength="6" // Assuming OTP is 6 digits
+//           />
+//         </div>
+//         <button type='submit' className='bg-primary text-white w-full py-2 my-2 rounded-md text-base'>Verify OTP</button>
+//         <NavLink to='/login' >Back to login <span className='text-primary underline cursor-pointer'>Click here</span></NavLink>
+//       </div>
+//     </form>
+//   )
+// }
+
+// export default Otp
