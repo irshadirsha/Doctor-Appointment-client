@@ -33,7 +33,7 @@ const MyAppointments = () => {
     };
 
     useEffect(() => {
-        if (!token) {
+        if (!token || !user) {
             navigate('/login');
         } else if (userId) {
             fetchAppointments();
