@@ -1,74 +1,74 @@
-import React from 'react'
-import { assets } from '../../assets/assets'
+import React, { useState, useEffect } from 'react';
+import { assets } from '../../assets/assets';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function DoctorDashboard() {
+  const [dashboardData, setDashboardData] = useState({
+    earnings: 0,
+    appointments: 0,
+    patients: 0,
+    latestAppointments: []
+  });
 
-  // Static mock data
-  const mockDashData = {
-    earnings: "12,540",
-    appointments: 35,
-    patients: 28,
-    latestAppointments: [
-      {
-        userData: {
-          name: "John Doe",
-          image: assets.default_user_image
-        },
-        slotDate: "2023-09-10T10:00:00",
-        cancelled: false,
-        isCompleted: true
-      },
-      {
-        userData: {
-          name: "Jane Smith",
-          image: assets.default_user_image
-        },
-        slotDate: "2023-09-09T12:00:00",
-        cancelled: true,
-        isCompleted: false
-      },
-      {
-        userData: {
-          name: "Mark Johnson",
-          image: assets.default_user_image
-        },
-        slotDate: "2023-09-08T14:00:00",
-        cancelled: false,
-        isCompleted: false
-      }
-    ]
-  }
+  const baseURL = import.meta.env.VITE_BACKEND_URL;
 
-  // Static helper function for date formatting
   const slotDateFormat = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' }
-    return new Date(dateString).toLocaleDateString(undefined, options)
-  }
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
-  const currency = "$"
+  const currency = '₹'; 
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem('doctorToken');
+        const doctor = JSON.parse(localStorage.getItem('doctor'));
+
+        if (!token || !doctor) {
+          toast.error('Authentication failed. Please log in again.');
+          return;
+        }
+
+        const doctorId = doctor.id;
+
+        const response = await axios.get(`${baseURL}/api/doctor/doctor-dashboard/${doctorId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setDashboardData(response.data);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        toast.error('Failed to fetch dashboard data. Please try again.');
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
 
   return (
     <div className='m-5'>
-
       <div className='flex flex-wrap gap-3'>
         <div className='flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all'>
           <img className='w-14' src={assets.earning_icon} alt="" />
           <div>
-            <p className='text-xl font-semibold text-gray-600'>{currency} {mockDashData.earnings}</p>
+            <p className='text-xl font-semibold text-gray-600'>{currency} {dashboardData.earnings}</p>
             <p className='text-gray-400'>Earnings</p>
           </div>
         </div>
         <div className='flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all'>
           <img className='w-14' src={assets.appointments_icon} alt="" />
           <div>
-            <p className='text-xl font-semibold text-gray-600'>{mockDashData.appointments}</p>
+            <p className='text-xl font-semibold text-gray-600'>{dashboardData.appointments}</p>
             <p className='text-gray-400'>Appointments</p>
           </div>
         </div>
         <div className='flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all'>
           <img className='w-14' src={assets.patients_icon} alt="" />
           <div>
-            <p className='text-xl font-semibold text-gray-600'>{mockDashData.patients}</p>
+            <p className='text-xl font-semibold text-gray-600'>{dashboardData.patients}</p>
             <p className='text-gray-400'>Patients</p>
           </div>
         </div>
@@ -81,29 +81,30 @@ function DoctorDashboard() {
         </div>
 
         <div className='pt-4 border border-t-0'>
-          {mockDashData.latestAppointments.map((item, index) => (
-            <div className='flex items-center px-6 py-3 gap-3 hover:bg-gray-100' key={index}>
-              <img className='rounded-full w-10' src={item.userData.image} alt="" />
-              <div className='flex-1 text-sm'>
-                <p className='text-gray-800 font-medium'>{item.userData.name}</p>
-                <p className='text-gray-600 '>Booking on {slotDateFormat(item.slotDate)}</p>
+          {dashboardData.latestAppointments.length > 0 ? (
+            dashboardData.latestAppointments.map((item, index) => (
+              <div className='flex items-center px-6 py-3 gap-3 hover:bg-gray-100' key={index}>
+                <img className='rounded-full w-10' src={item.userData.image || assets.default_user_image} alt="" />
+                <div className='flex-1 text-sm'>
+                  <p className='text-gray-800 font-medium'>{item.userData.name}</p>
+                  <p className='text-gray-600 '>Booking on {slotDateFormat(item.slotDate)}</p>
+                </div>
+                {item.cancelled
+                  ? <p className='text-red-400 text-xs font-medium'>Cancelled</p>
+                  : item.isCompleted
+                    ? <p className='text-green-500 text-xs font-medium'>Completed</p>
+                    : null
+                }
               </div>
-              {item.cancelled
-                ? <p className='text-red-400 text-xs font-medium'>Cancelled</p>
-                : item.isCompleted
-                  ? <p className='text-green-500 text-xs font-medium'>Completed</p>
-                  : <div className='flex'>
-                    <img className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
-                    <img className='w-10 cursor-pointer' src={assets.tick_icon} alt="" />
-                  </div>
-              }
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-center py-4 text-gray-500">No recent bookings found</p>
+          )}
         </div>
       </div>
-
     </div>
-  )
+  );
 }
 
-export default DoctorDashboard
+export default DoctorDashboard;
+

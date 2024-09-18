@@ -47,12 +47,13 @@ import cancel_icon from './cancel_icon.svg'
 import list_icon from './list_icon.svg'
 import add_icon from './add_icon.svg'
 import upload_area from './upload_area.svg'
-
+import tick_icon from './tick_icon.svg'
 
 
 
 export const assets = {
     appointment_img,
+    tick_icon,
     upload_area,
     list_icon,
     cancel_icon,

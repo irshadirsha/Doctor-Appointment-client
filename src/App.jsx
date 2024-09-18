@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+// import ProtectedRoute from './components/ProtectedRoteUser';
 import Register from './components/Register';
 import Home from './Pages/Home';
 import AllDoctors from './Pages/AllDoctors';
@@ -23,7 +24,6 @@ import DoctorProfile from './Pages/DoctorPages/DoctorProfile';
 import DoctorLogin from './Pages/DoctorPages/DoctorLogin';
 import Appointment from './Pages/Appointment';
 import ManageDoctorSlots from './Pages/AdminPages/ManageDoctorSlots';
-
 function App() {
   return (
     <BrowserRouter>
@@ -71,72 +71,3 @@ function MainRoutes() {
 export default App;
 
 
-
-
-// import React from 'react'
-// import './App.css'
-// import {BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
-// import Register from './components/Register'
-// import Login from './components/login'
-// import Home from './Pages/Home'
-// import NavBar from './components/NavBar'
-// import Footer from './components/Footer'
-// import AllDoctors from './Pages/AllDoctors'
-// import About from './Pages/About'
-// import Contact from './Pages/Contact'
-// import Appointment from './Pages/Appointment'
-// import MyAppointments from './Pages/MyAppointments'
-// import Otp from './components/Otp'
-// import NavBarAdmin from './components/AdminComponents/NavBarAdmin'
-// import SideBar from './components/AdminComponents/SideBar'
-// import AdminLayout from './AdminLayout'
-// import UserLayout from './UserLayout'
-
-
-// function App() {   
- 
-
-//   const location = useLocation();
-//   // const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
-//   const isAdminRoute = location.pathname.startsWith('/admin') // Check if the route is for admin
-//   return (
-//     <>
-//     <div className='mx-4 sm:mx-[10%]'>
-//      <BrowserRouter>
-//     <NavBar/>
-//     <NavBarAdmin/>
-//      <Routes>
-//       <Route path='/' element={<Home/>}/>
-//       <Route path='/register' element={<Register/>}/>
-//       <Route path='/login' element={<Login/>}/>
-//       <Route path='/otpverify' element={<Otp/>}/>
-//       <Route path='/doctors' element={<AllDoctors/>}/>
-//       <Route path='/about' element={<About/>}/>
-//       <Route path='/contact' element={<Contact/>}/>
-//       <Route path='/appointment' element={<Appointment/>} />
-//       <Route path='/my-appointment' element={<MyAppointments/>} />
-
-
-//       <Route path='/admin' element={<NavBarAdmin/>}/>
-//       <Route path='/admin-sidebar' element={<SideBar/>}/>
-
-      
-//      </Routes>
-//      <Footer/>
-//      </BrowserRouter>
-//      </div>
-
-//      <div>
-//      <BrowserRouter>
-//     <NavBarAdmin/>
-//      <Routes>
-//       <Route path='/admin' element={<NavBarAdmin/>}/>
-//       <Route path='/admin-sidebar' element={<SideBar/>}/>
-//      </Routes>
-//      </BrowserRouter>
-//      </div>
-//     </>
-//   )
-// }
-
-// export default App

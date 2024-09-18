@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, NavLink } from 'react-router-dom'
 import axios from 'axios'
 
@@ -6,26 +6,32 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const baseURL = import.meta.env.VITE_BACKEND_URL; // Ensure your backend URL is set in the env file
+  const baseURL = import.meta.env.VITE_BACKEND_URL; 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    
+    if (token && user) {
+      navigate('/'); 
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      // Making the API call to backend /login route
+     
       const response = await axios.post(`${baseURL}/api/user/login`, {
         email,
         password
       });
 
       console.log("Login response:", response.data);
-
-      // Store the token in localStorage
-      localStorage.setItem('token', response.data.token); // Store the JWT token
-      localStorage.setItem('user', JSON.stringify(response.data.user)); // Store user details
-
-      // Navigate to the home or dashboard page upon successful login
+      localStorage.setItem('token', response.data.token); 
+      localStorage.setItem('user', JSON.stringify(response.data.user)); 
       navigate('/');
     } catch (error) {
       console.error("Login failed:", error.response?.data?.message || error.message);
@@ -59,8 +65,7 @@ const Login = () => {
           />
         </div>
         <button className='bg-primary text-white w-full py-2 my-2 rounded-md text-base'>Login</button>
-        
-        {/* Display error message if login fails */}
+      
         {error && <p className="text-red-500">{error}</p>}
         
         <NavLink to='/register'>Create a new account? <span className='text-primary underline cursor-pointer'>Click here</span></NavLink>
