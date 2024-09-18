@@ -1,34 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; 
+import Loader from '../components/Loader';
 
 const AllDoctors = () => {
   const [doctors, setDoctors] = useState([]); 
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [showFilter, setShowFilter] = useState(false); 
   const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_BACKEND_URL; 
+  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`${baseURL}/api/admin/get-doctors`);
         setDoctors(response.data.doctors); 
         setLoading(false);
       } catch (error) {
         console.error('Error fetching doctors:', error);
         setLoading(false);
-      }
+      }finally {
+        setLoading(false);
+    }
     };
 
     fetchDoctors();
   }, [baseURL]);
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
 
   return (
     <div>
       <p className='text-gray-600'>Select Your doctors for Appointment.</p>
+      {loading ? (
+                <Loader />
+            ) : (
       <div className='flex flex-col sm:flex-row items-start gap-5 mt-5'>
         <button onClick={() => setShowFilter(!showFilter)} className={`py-1 px-3 border rounded text-sm transition-all sm:hidden ${showFilter ? 'bg-primary text-white' : ''}`}>
           Filters
@@ -73,6 +81,7 @@ const AllDoctors = () => {
           ))}
         </div>
       </div>
+            )}
     </div>
   );
 };

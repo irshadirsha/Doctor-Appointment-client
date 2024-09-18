@@ -47,11 +47,16 @@ const ManageDoctorSlots = () => {
     }
 
     try {
+      const token = localStorage.getItem('token');
       console.log("slots", startDate, endDate, timeSlots);
       const response = await axios.post(`${baseURL}/api/admin/add-slots/${doctorId}`, {
         startDate,
         endDate,
         slots: timeSlots,
+      },{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
       });
       
       console.log("response", response);

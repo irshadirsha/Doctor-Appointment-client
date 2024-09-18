@@ -159,7 +159,7 @@ const Appointment = () => {
             </div>
         </div>
     ) : (
-        <p>Loading...</p>
+        <p className='text-center'>Loading...</p>
     );
 };
 

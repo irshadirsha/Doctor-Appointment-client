@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { assets } from '../../assets/assets';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../../components/Loader';
+ 
 
 function AdminDashbord() {
   const baseURL=import.meta.env.VITE_BACKEND_URL
@@ -12,6 +14,7 @@ function AdminDashbord() {
     totalAppointments: 0,
     latestBookings: [],
   });
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -20,6 +23,7 @@ function AdminDashbord() {
           if (!token) {
             navigate('/admin-login'); 
           }
+          setIsLoading(true); 
         const response = await axios.get(`${baseURL}/api/admin/dashboard-stats`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -27,9 +31,10 @@ function AdminDashbord() {
         });
         setDashboardData(response.data);
         console.log("respp", response);
-        
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
+        setIsLoading(false);
       }
     };
 
@@ -38,6 +43,10 @@ function AdminDashbord() {
 
   return (
     <div className='m-5'>
+      {isLoading ? (
+        <Loader/> 
+      ) : (
+        <>
       <div className='flex flex-wrap gap-3'>
         <div className='flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all'>
           <img className='w-14' src={assets.doctor_icon} alt="" />
@@ -86,6 +95,8 @@ function AdminDashbord() {
           )}
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

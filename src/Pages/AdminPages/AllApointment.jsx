@@ -9,7 +9,6 @@ function AllAppointment() {
   const [loading, setLoading] = useState(true);
   const baseUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -20,7 +19,7 @@ function AllAppointment() {
     const fetchAppointments = async () => {
       try {
         const token = localStorage.getItem('token');
-
+  
         const response = await axios.get(`${baseUrl}/api/admin/get-appointment`,{
           headers:{
             Authorization:`Bearer ${token}`
