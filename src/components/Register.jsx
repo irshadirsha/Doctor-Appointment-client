@@ -23,7 +23,8 @@ function Register() {
       });
 
       if (response.status === 201) {
-        navigate('/otpverify');
+        // navigate('/otpverify');
+        navigate('/otpverify', { state: { email } });
       }
     } catch (error) {
 

@@ -1,12 +1,22 @@
-import React, { useState } from 'react'
-import { useNavigate, NavLink } from 'react-router-dom'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate, NavLink } from 'react-router-dom';
+import axios from 'axios';
 
 const Otp = () => {
   const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
   const baseURL = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.email) {
+      console.log("emain in location--",location.state.email)
+      setEmail(location.state.email); 
+    }
+  }, [location.state?.email]);
+  console.log("email",email);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +30,7 @@ const Otp = () => {
 
       console.log("Response from OTP verification:", response.data);
 
-      if(response.data.status) {
+      if (response.data.status) {
         console.log("OTP verified successfully, navigating to login page");
         navigate('/login'); 
       } else {
@@ -29,7 +39,7 @@ const Otp = () => {
     } catch (error) {
       console.error("Error verifying OTP:", error.response?.data?.message || error.message);
     }
-  }
+  };
 
   return (
     <form className='min-h-[80vh] flex items-center' onSubmit={handleSubmit}>
@@ -38,14 +48,12 @@ const Otp = () => {
         <p>Please enter the OTP sent to your registered email.</p>
 
         <div className='w-full'>
-          <p>Email</p>
+          <p>Emailssss</p>
           <input 
-            onChange={(e) => setEmail(e.target.value)} 
-            value={email} 
+            value={email}
             className='border border-[#DADADA] rounded w-full p-2 mt-1' 
             type="email" 
-            required 
-            placeholder="Enter your email"
+            readOnly 
           />
         </div>
 
@@ -71,8 +79,9 @@ const Otp = () => {
         </NavLink>
       </div>
     </form>
-  )
-}
+  );
+};
 
 export default Otp;
+
 

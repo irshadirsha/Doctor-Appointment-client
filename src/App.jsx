@@ -22,7 +22,6 @@ import DoctorProfile from './Pages/DoctorPages/DoctorProfile';
 import DoctorLogin from './Pages/DoctorPages/DoctorLogin';
 import Appointment from './Pages/Appointment';
 import ManageDoctorSlots from './Pages/AdminPages/ManageDoctorSlots';
-
 import Login from './components/Login';
 function App() {
   return (

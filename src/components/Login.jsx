@@ -32,6 +32,7 @@ const Login = () => {
       console.log("Login response:", response.data);
       localStorage.setItem('token', response.data.token); 
       localStorage.setItem('user', JSON.stringify(response.data.user)); 
+      window.dispatchEvent(new Event('storage'));
       navigate('/');
     } catch (error) {
       console.error("Login failed:", error.response?.data?.message || error.message);
