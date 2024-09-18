@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { assets } from '../../assets/assets';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function DoctorDashboard() {
+  const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState({
     earnings: 0,
     appointments: 0,
@@ -26,9 +28,11 @@ function DoctorDashboard() {
         const doctor = JSON.parse(localStorage.getItem('doctor'));
 
         if (!token || !doctor) {
+          navigate('/doctor-login');
           toast.error('Authentication failed. Please log in again.');
           return;
         }
+       
 
         const doctorId = doctor.id;
 

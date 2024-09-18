@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { assets } from '../../assets/assets';
+import { useNavigate } from 'react-router-dom';
 
 function AdminDashbord() {
   const baseURL=import.meta.env.VITE_BACKEND_URL
+  const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState({
     totalDoctors: 0,
     totalPatients: 0,
@@ -15,6 +17,9 @@ function AdminDashbord() {
     const fetchDashboardData = async () => {
       try {
         const token = localStorage.getItem('token');
+          if (!token) {
+            navigate('/admin-login'); 
+          }
         const response = await axios.get(`${baseURL}/api/admin/dashboard-stats`, {
           headers: {
             Authorization: `Bearer ${token}`

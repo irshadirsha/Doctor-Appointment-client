@@ -2,12 +2,20 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { assets } from '../../assets/assets';
+import { useNavigate } from 'react-router-dom';
 
 function AllAppointment() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const baseUrl = import.meta.env.VITE_BACKEND_URL;
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/admin-login'); 
+    }
+  }, []); 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {

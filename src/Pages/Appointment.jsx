@@ -50,6 +50,7 @@ const Appointment = () => {
             }
 
             console.log("appoint ment function called")
+            
             const response = await axios.post(
                 `${baseURL}/api/appoint/book-appointment`, 
                 {

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { assets } from '../../assets/assets';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const DoctorAppointments = () => {
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const baseURL = import.meta.env.VITE_BACKEND_URL;
 
@@ -13,6 +15,7 @@ const DoctorAppointments = () => {
       const doctor = JSON.parse(localStorage.getItem('doctor'));
 
       if (!token || !doctor) {
+          navigate('/doctor-login');
         toast.error('Authentication failed. Please log in again.');
         return;
       }

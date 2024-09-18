@@ -12,6 +12,9 @@ const DoctorsList = () => {
     const fetchDoctors = async () => {
       try {
         const token = localStorage.getItem('token');
+          if (!token) {
+            navigate('/admin-login'); 
+          }
         const response = await axios.get(`${baseURL}/api/admin/get-doctors`,{
           headers: {
                  Authorization: `Bearer ${token}` 

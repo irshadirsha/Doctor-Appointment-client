@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import {  useNavigate, useParams } from 'react-router-dom';
@@ -11,6 +11,12 @@ const ManageDoctorSlots = () => {
   const baseURL = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate()
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/admin-login'); 
+    }
+  }, []); 
   const generateTimeOptions = () => {
     const times = [];
     for (let hour = 7; hour <= 18; hour++) {

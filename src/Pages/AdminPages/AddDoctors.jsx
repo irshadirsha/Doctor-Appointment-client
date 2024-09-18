@@ -1,7 +1,8 @@
-import React, {  useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import { assets } from '../../assets/assets'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 function AddDoctors() {
 
@@ -17,9 +18,16 @@ function AddDoctors() {
     const [address1, setAddress1] = useState('')
     const [address2, setAddress2] = useState('')
 
+    const navigate = useNavigate();
     const cloudName = import.meta.env.VITE_CLOUD_NAME;
     const baseURL = import.meta.env.VITE_BACKEND_URL;
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/admin-login'); 
+        }
+      }, []); 
 
     const onSubmitHandler = async (event) => {
         event.preventDefault()

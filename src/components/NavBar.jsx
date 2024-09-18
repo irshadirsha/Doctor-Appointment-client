@@ -11,7 +11,7 @@ const NavBar = () => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
     setIsAuthenticated(!!token && !!user); 
-  }, []);
+  }, [isAuthenticated]);
 
   const handleLogout = () => {
    
