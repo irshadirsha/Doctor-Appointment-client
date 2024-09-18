@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-// import ProtectedRoute from './components/ProtectedRoteUser';
 import Register from './components/Register';
 import Home from './Pages/Home';
 import AllDoctors from './Pages/AllDoctors';
@@ -12,7 +11,6 @@ import Otp from './components/Otp';
 import AdminLayout from './Layout/AdminLayout';
 import UserLayout from './Layout/UserLayout';
 import DoctorLayout from './Layout/DoctorLayout';
-import Login from './components/login';
 import AdminDashbord from './Pages/AdminPages/AdminDashbord';
 import AddDoctors from './Pages/AdminPages/AddDoctors';
 import AllApointment from './Pages/AdminPages/AllApointment';
@@ -24,6 +22,8 @@ import DoctorProfile from './Pages/DoctorPages/DoctorProfile';
 import DoctorLogin from './Pages/DoctorPages/DoctorLogin';
 import Appointment from './Pages/Appointment';
 import ManageDoctorSlots from './Pages/AdminPages/ManageDoctorSlots';
+
+import Login from './components/Login';
 function App() {
   return (
     <BrowserRouter>
@@ -49,7 +49,7 @@ function MainRoutes() {
       <Route element={<UserLayout />}>
         <Route path='/' element={<Home />} />
         <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
+        <Route path='/login' element={<Login/>} />
         <Route path='/otpverify' element={<Otp />} />
         <Route path='/doctors' element={<AllDoctors />} />
         <Route path='/about' element={<About />} />
