@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import {  useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from '../../Api/AdminConfig';
 
 const ManageDoctorSlots = () => {
   const { doctorId } = useParams(); 
@@ -12,8 +12,8 @@ const ManageDoctorSlots = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const adminaccessToken = localStorage.getItem('adminaccessToken');
+    if (!adminaccessToken) {
       navigate('/admin-login'); 
     }
   }, []); 
@@ -47,16 +47,11 @@ const ManageDoctorSlots = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
       console.log("slots", startDate, endDate, timeSlots);
-      const response = await axios.post(`${baseURL}/api/admin/add-slots/${doctorId}`, {
+      const response = await axiosInstance.post(`${baseURL}/api/admin/add-slots/${doctorId}`, {
         startDate,
         endDate,
         slots: timeSlots,
-      },{
-        headers:{
-          Authorization:`Bearer ${token}`
-        }
       });
       
       console.log("response", response);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'; 
+import axiosInstance from '../../Api/AdminConfig';
 
 const DoctorsList = () => {
   const [doctors, setDoctors] = useState([]); 
@@ -9,31 +9,28 @@ const DoctorsList = () => {
   const navigate = useNavigate(); 
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const token = localStorage.getItem('token');
-          if (!token) {
-            navigate('/admin-login'); 
-          }
-        const response = await axios.get(`${baseURL}/api/admin/get-doctors`,{
-          headers: {
-                 Authorization: `Bearer ${token}` 
-              }
-        });
-
-        if (response.data.status) {
-          setDoctors(response.data.doctors); 
-        } else {
-          toast.error(response.data.message);
-        }
-      } catch (error) {
-        console.error('Error fetching doctors:', error);
-        toast.error('Failed to load doctors');
-      }
-    };
-
+    const adminaccessToken = localStorage.getItem('adminaccessToken');
+    if (!adminaccessToken) {
+      navigate('/admin-login'); 
+    }
     fetchDoctors();
   }, []); 
+
+  const fetchDoctors = async () => {
+    try {
+      const response = await axiosInstance.get(`${baseURL}/api/admin/get-doctors`);
+
+      if (response.data.status) {
+        setDoctors(response.data.doctors); 
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+      toast.error('Failed to load doctors');
+    }
+  };
+
 
   const handleDoctorClick = (doctorId) => {
     navigate(`/admin-ManageSlots/${doctorId}`);
@@ -44,12 +41,7 @@ const DoctorsList = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this doctor?");
     if (!confirmDelete) return; 
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.delete(`${baseURL}/api/admin/remove-doctor/${doctorId}`,{
-        headers: {
-          Authorization: `Bearer ${token}` 
-       }
-      });
+      const response = await axiosInstance.delete(`${baseURL}/api/admin/remove-doctor/${doctorId}`);
       console.log("responsse", response)
       if (response.data.success) {
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../Api/config';
 
 const Otp = () => {
   const [otp, setOtp] = useState('');
@@ -23,7 +23,7 @@ const Otp = () => {
     console.log('OTP and email submitted:', otp, email);
 
     try {
-      const response = await axios.post(`${baseURL}/api/user/verify-otp`, {
+      const response = await axiosInstance.post(`${baseURL}/api/user/verify-otp`, {
         email,
         otp
       });

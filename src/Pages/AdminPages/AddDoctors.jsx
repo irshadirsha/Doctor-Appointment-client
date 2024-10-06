@@ -3,6 +3,7 @@ import { assets } from '../../assets/assets'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../../Api/AdminConfig'
 
 function AddDoctors() {
 
@@ -23,8 +24,8 @@ function AddDoctors() {
     const baseURL = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
+        const adminaccessToken = localStorage.getItem('adminaccessToken');
+        if (!adminaccessToken) {
           navigate('/admin-login'); 
         }
       }, []); 
@@ -68,14 +69,7 @@ function AddDoctors() {
 
               
         console.log("formData",formData)   
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${baseURL}/api/admin/add-doctor`,
-            formData,{
-                headers: {
-                    Authorization: `Bearer ${token}` 
-                 }
-            }
-        );
+        const response = await axiosInstance.post(`${baseURL}/api/admin/add-doctor`,formData);
        console.log('response----',response)
        console.log('response----',response.data.status)
         if (response.data.status) {

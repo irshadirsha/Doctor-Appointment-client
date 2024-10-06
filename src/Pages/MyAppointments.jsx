@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
 import Loader from '../components/Loader';
+import axiosInstance from '../Api/config';
 
 const MyAppointments = () => {
     const navigate = useNavigate(); 
-    const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
     const userId = user ? user.id : null;
     const baseURL = import.meta.env.VITE_BACKEND_URL;
@@ -15,13 +14,7 @@ const MyAppointments = () => {
     const fetchAppointments = async () => {
         try {
             setLoading(true);
-            console.log("token in my appointments ", token);
-            console.log("user in my appointments ", user);
-            const response = await axios.get(`${baseURL}/api/appoint/booking-history/${userId.trim()}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await axiosInstance.get(`${baseURL}/api/appoint/booking-history/${userId.trim()}`);
 
             console.log("Response received:", response);
 
@@ -38,21 +31,19 @@ const MyAppointments = () => {
     };
 
     useEffect(() => {
-        if (!token || !user) {
+        const accessToken = localStorage.getItem('accessToken');
+        const user = localStorage.getItem('user');
+        if (!accessToken || !user) {
             navigate('/login');
         } else if (userId) {
             fetchAppointments();
         }
-    }, [userId, token, navigate]); 
+    }, [userId, navigate]); 
 
     const cancelAppointment = async (appointmentId) => {
         try {
             setLoading(true);
-            const response = await axios.get(`${baseURL}/api/appoint/cancel-appoint/${appointmentId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await axiosInstance.get(`${baseURL}/api/appoint/cancel-appoint/${appointmentId}`);
             console.log("response in cancel", response);
 
             if (response.data.success) {

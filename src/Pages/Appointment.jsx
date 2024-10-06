@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { assets } from '../assets/assets'; 
+import axiosInstance from '../Api/config';
 
 const Appointment = () => {
     const { id } = useParams(); 
@@ -18,7 +18,7 @@ const Appointment = () => {
     useEffect(() => {
         const fetchDoctorData = async () => {
             try {
-                const response = await axios.get(`${baseURL}/api/appoint/book-appointment/${id}`);
+                const response = await axiosInstance.get(`${baseURL}/api/appoint/book-appointment/${id}`);
                 console.log("response",response)
                 setDocInfo(response.data.doctor);
                 setDocSlots(response.data.slots);
@@ -39,11 +39,11 @@ const Appointment = () => {
 
         try {
 
-            const token = localStorage.getItem('token');
+            // const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user'));
             const userId = user ? user.id : null; 
-           console.log("from local", token,user, userId)
-            if (!token || !userId) {
+           console.log("from local",user, userId)
+            if (!userId) {
                 alert('User not authenticated. Please log in.');
                 navigate('/login');
                 return;
@@ -51,20 +51,14 @@ const Appointment = () => {
 
             console.log("appoint ment function called")
             
-            const response = await axios.post(
+            const response = await axiosInstance.post(
                 `${baseURL}/api/appoint/book-appointment`, 
                 {
                     docId: id, 
                     slotDate: docSlots[slotIndex].date, 
                     slotTime, 
                     userId 
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}` 
-                    }
-                }
-            );
+                });
             if (response.data.success) {
                 alert('Appointment booked successfully!');
                 navigate('/my-appointment');

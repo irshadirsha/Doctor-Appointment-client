@@ -7,10 +7,8 @@ const NavBarAdmin = () => {
 
   const handleLogout = () => {
 
-    localStorage.removeItem('token');
+    localStorage.removeItem('adminaccessToken');
     localStorage.removeItem('admin');
-
- 
     navigate('/admin-login');
   };
 

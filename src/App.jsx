@@ -23,7 +23,7 @@ import DoctorLogin from './Pages/DoctorPages/DoctorLogin';
 import Appointment from './Pages/Appointment';
 import ManageDoctorSlots from './Pages/AdminPages/ManageDoctorSlots';
 import Login from './components/Login';
-import Loader from './components/Loader';
+
 function App() {
   return (
     <BrowserRouter>

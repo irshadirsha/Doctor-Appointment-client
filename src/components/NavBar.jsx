@@ -8,25 +8,26 @@ const NavBar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const accessToken = localStorage.getItem('accessToken');
     const user = localStorage.getItem('user');
-    setIsAuthenticated(!!token && !!user); 
+    setIsAuthenticated(!!accessToken && !!user); 
   }, []);
 
   
   useEffect(() => {
     const handleStorageChange = () => {
-      const token = localStorage.getItem('token');
+      const accessToken = localStorage.getItem('accessToken');
       const user = localStorage.getItem('user');
-      setIsAuthenticated(!!token && !!user);
+      setIsAuthenticated(!!accessToken && !!user);
     };
+
 
     window.addEventListener('storage', handleStorageChange); // Listen for changes in localStorage
     return () => window.removeEventListener('storage', handleStorageChange); // Cleanup event listener
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     navigate('/login');

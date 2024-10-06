@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, NavLink } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../Api/config';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,28 +10,31 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const accessToken = localStorage.getItem('accessToken');
     const user = localStorage.getItem('user');
+    console.log("inside useeffect  accessToken, user",accessToken,user)
     
-    
-    if (token && user) {
+    if (accessToken && user) {
       navigate('/'); 
     }
-  }, [navigate]);
+  },[navigate, email, password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
      
-      const response = await axios.post(`${baseURL}/api/user/login`, {
+      const response = await axiosInstance.post(`${baseURL}/api/user/login`, {
         email,
         password
       });
 
       console.log("Login response:", response.data);
-      localStorage.setItem('token', response.data.token); 
-      localStorage.setItem('user', JSON.stringify(response.data.user)); 
+      localStorage.setItem('accessToken', response.data.accessToken);  // Store access token
+      localStorage.setItem('refreshToken', response.data.refreshToken); // Store refresh token
+      localStorage.setItem('user', JSON.stringify(response.data.user)); // Store user info
+      localStorage.setItem('accessToken', response.data.accessToken);
+      console.log("Access token stored:", localStorage.getItem('accessToken'));  // Debug token storing
       window.dispatchEvent(new Event('storage'));
       navigate('/');
     } catch (error) {

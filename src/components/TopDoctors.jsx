@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; 
+import axiosInstance from '../Api/config';
 
 const TopDoctors = () => {
   const [doctors, setDoctors] = useState([]);
@@ -12,7 +12,7 @@ const TopDoctors = () => {
     const fetchDoctors = async () => {
       try {
        
-        const response = await axios.get(`${baseURL}/api/admin/get-doctors`);
+        const response = await axiosInstance.get(`${baseURL}/api/admin/get-doctors`);
         console.log("response",response)
        
         setDoctors(response.data.doctors.slice(0, 8));

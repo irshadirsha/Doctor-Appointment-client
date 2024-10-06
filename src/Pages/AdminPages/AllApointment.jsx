@@ -1,54 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { assets } from '../../assets/assets';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../Api/AdminConfig';
 
 function AllAppointment() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const baseUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
+  
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const adminaccessToken = localStorage.getItem('adminaccessToken');
+    if (!adminaccessToken) {
       navigate('/admin-login'); 
     }
   }, []); 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const token = localStorage.getItem('token');
-  
-        const response = await axios.get(`${baseUrl}/api/admin/get-appointment`,{
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
-        });
+  const fetchAppointments = async () => {
+    try {
 
-        console.log('Response in All Appointment:', response);
-        if (response.data.success) {
-          setAppointments(response.data.appointments);
-        } else {
-          toast.error(response.data.message || 'Failed to fetch appointments');
-        }
-      } catch (error) {
-        console.error('Error fetching appointments:', error);
-        toast.error('Error fetching appointments');
-      } finally {
-        setLoading(false);
+      const response = await axiosInstance.get(`${baseUrl}/api/admin/get-appointment`,);
+
+      console.log('Response in All Appointment:', response);
+      if (response.data.success) {
+        setAppointments(response.data.appointments);
+      } else {
+        toast.error(response.data.message || 'Failed to fetch appointments');
       }
-    };
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+      toast.error('Error fetching appointments');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchAppointments();
   }, []);
 
-  const calculateAge = (dob) => {
-    if (!dob) return '-';
-    const birthDate = new Date(dob);
-    const age = new Date().getFullYear() - birthDate.getFullYear();
-    return age;
-  };
 
   const slotDateFormat = (slotDate) => {
     const date = new Date(slotDate);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import axios from 'axios'
+import axiosInstance from '../Api/config';
+
 
 function Register() {
   const [name, setName] = useState('');
@@ -16,7 +17,7 @@ function Register() {
       console.log("inside reg function",baseURL);
       console.log("inside reg function",name,email,password);
       
-      const response = await axios.post(`${baseURL}/api/user/register`, {
+      const response = await axiosInstance.post(`${baseURL}/api/user/register`, {
         name,
         email,
         password,

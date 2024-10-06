@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { assets } from '../../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader';
+import axiosInstance from '../../Api/AdminConfig';
  
 
 function AdminDashbord() {
@@ -15,31 +15,28 @@ function AdminDashbord() {
     latestBookings: [],
   });
   const [isLoading, setIsLoading] = useState(true); 
-
+  
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-          if (!token) {
-            navigate('/admin-login'); 
-          }
-          setIsLoading(true); 
-        const response = await axios.get(`${baseURL}/api/admin/dashboard-stats`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setDashboardData(response.data);
-        console.log("respp", response);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-        setIsLoading(false);
+    const adminaccessToken = localStorage.getItem('adminaccessToken');
+    if (!adminaccessToken) {
+        navigate('/admin-login');
       }
-    };
-
     fetchDashboardData();
   }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+        setIsLoading(true); 
+      const response = await axiosInstance.get(`${baseURL}/api/admin/dashboard-stats`);
+      setDashboardData(response.data);
+      console.log("respp", response);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      setIsLoading(false);
+    }
+  };
+
 
   return (
     <div className='m-5'>
