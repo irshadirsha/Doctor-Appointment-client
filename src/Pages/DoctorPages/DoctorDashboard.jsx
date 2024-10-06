@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { assets } from '../../assets/assets';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import doctorAxiosInstance from '../../Api/DoctorConfig';
 
 function DoctorDashboard() {
   const navigate = useNavigate();
@@ -36,11 +36,7 @@ function DoctorDashboard() {
 
         const doctorId = doctor.id;
 
-        const response = await axios.get(`${baseURL}/api/doctor/doctor-dashboard/${doctorId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await doctorAxiosInstance.get(`${baseURL}/api/doctor/doctor-dashboard/${doctorId}`);
 
         setDashboardData(response.data);
       } catch (error) {

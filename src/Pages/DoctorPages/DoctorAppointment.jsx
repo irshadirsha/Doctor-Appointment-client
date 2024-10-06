@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { assets } from '../../assets/assets';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import doctorAxiosInstance from '../../Api/DoctorConfig';
 
 const DoctorAppointments = () => {
   const navigate = useNavigate();
@@ -11,10 +11,10 @@ const DoctorAppointments = () => {
 
   const fetchAppointments = async () => {
     try {
-      const token = localStorage.getItem('doctorToken');
+      const doctorAccessToken = localStorage.getItem('doctorAccessToken');
       const doctor = JSON.parse(localStorage.getItem('doctor'));
 
-      if (!token || !doctor) {
+      if (!doctorAccessToken || !doctor) {
           navigate('/doctor-login');
         toast.error('Authentication failed. Please log in again.');
         return;
@@ -22,14 +22,8 @@ const DoctorAppointments = () => {
 
       const doctorId = doctor.id; 
 
-      const response = await axios.get(
-        `${baseURL}/api/doctor/doctor-appointments/${doctorId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await doctorAxiosInstance.get(
+        `${baseURL}/api/doctor/doctor-appointments/${doctorId}`);
 
       setAppointments(response.data.appointments);
     } catch (error) {
@@ -58,24 +52,15 @@ const DoctorAppointments = () => {
       console.log(`Cancel appointment with ID: ${appointmentId}`);
       try {
         const doctor = JSON.parse(localStorage.getItem('doctor'));
-        const token = localStorage.getItem('doctorToken');
         const doctorId = doctor.id; 
-        console.log("Token:", token);
         console.log("Doctor ID----------:", doctorId);
-        if (!doctor || !token) {
+        if (!doctor) {
           toast.error('Authentication failed. Please log in again.');
           return;
         }
     
-        const response = await axios.put(
-          `${baseURL}/api/doctor/cancel-appoint/${doctorId}/${appointmentId}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await doctorAxiosInstance.put(
+          `${baseURL}/api/doctor/cancel-appoint/${doctorId}/${appointmentId}`);
         console.log("res",response)
     
         toast.success(response.data.message);
@@ -90,24 +75,16 @@ const DoctorAppointments = () => {
       console.log(`Complete appointment with ID: ${appointmentId}`);
       try {
         const doctor = JSON.parse(localStorage.getItem('doctor'));
-        const token = localStorage.getItem('doctorToken');
+        // const token = localStorage.getItem('doctorToken');
         const doctorId = doctor.id; 
-        console.log("Token:", token);
         console.log("Doctor ID----------:", doctorId);
-        if (!doctor || !token) {
+        if (!doctor) {
           toast.error('Authentication failed. Please log in again.');
           return;
         }
     
-        const response = await axios.put(
-          `${baseURL}/api/doctor/complete-appoint/${doctor.id}/${appointmentId}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await doctorAxiosInstance.put(
+          `${baseURL}/api/doctor/complete-appoint/${doctor.id}/${appointmentId}`,);
     
         toast.success(response.data.message);
         fetchAppointments();

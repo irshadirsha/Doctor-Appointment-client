@@ -11,32 +11,28 @@ const DoctorLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('doctorToken');
-    if (token) {
+    const doctorAccessToken = localStorage.getItem('doctorAccessToken');
+    if (doctorAccessToken) {
       navigate('/doctor-dashboard'); 
     }
-  }, [navigate]);
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
       const response = await axios.post(`${baseURL}/api/doctor/doctor-login`, { email, password });
-
-      const { token, doctor } = response.data;
+      const { doctoraccessToken, doctorrefreshToken, doctor } = response.data;
       console.log("Response:", response); 
-      console.log("Token:", token); 
-      console.log("Doctor Data:", doctor);
 
-     
       if (response.data.status) {
-     
-        localStorage.setItem('doctorToken', token); 
-        localStorage.setItem('doctor', JSON.stringify(doctor)); 
-        
-        navigate('/doctor-dashboard'); 
+        localStorage.setItem('doctorAccessToken', doctoraccessToken);
+        localStorage.setItem('doctorRefreshToken', doctorrefreshToken);
+        localStorage.setItem('doctor', JSON.stringify(doctor));
+  
+        navigate('/doctor-dashboard');
         toast.success('Login successful');
-      } else {
+      }  else {
         toast.error('Login failed. Please check your credentials.');
       }
     } catch (error) {

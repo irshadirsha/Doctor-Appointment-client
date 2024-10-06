@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import doctorAxiosInstance from '../../Api/DoctorConfig';
 
 const DoctorProfile = () => {
   const [profileData, setProfileData] = useState(null);
@@ -11,23 +11,21 @@ const DoctorProfile = () => {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const token = localStorage.getItem('doctorToken');
+      const doctorAccessToken = localStorage.getItem('doctorAccessToken');
       const doctorData = localStorage.getItem('doctor');
       const doctor = JSON.parse(doctorData);
-      if (!token || !doctor) {
+      if (!doctorAccessToken || !doctor) {
         navigate('/doctor-login');
         return;
       }
 
       const doctorId = doctor.id;
-      console.log("Token:", token);
+      // console.log("doctorAccessToken:", doctorAccessToken);
       console.log("Doctor ID----------:", doctorId);
 
       try {
       
-        const response = await axios.get(`${baseURL}/api/doctor/doctor-profile/${doctorId}`, {
-          headers: { Authorization: `Bearer ${token}` } 
-        });
+        const response = await doctorAxiosInstance.get(`${baseURL}/api/doctor/doctor-profile/${doctorId}`,)
         
         setProfileData(response.data.doctor);
         setLoading(false);

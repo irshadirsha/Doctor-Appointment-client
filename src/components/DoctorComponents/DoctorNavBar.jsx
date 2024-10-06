@@ -7,7 +7,7 @@ function DoctorNavBar() {
 
   const handleLogout = () => {
     
-    localStorage.removeItem('doctorToken');
+    localStorage.removeItem('doctorAccessToken');
     localStorage.removeItem('doctor');
     navigate('/doctor-login');
   };
