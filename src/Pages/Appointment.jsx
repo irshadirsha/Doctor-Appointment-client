@@ -15,21 +15,49 @@ const Appointment = () => {
     const slotsPerPage = 7; 
     const baseURL = import.meta.env.VITE_BACKEND_URL;
 
+    // useEffect(() => {
+    //     const fetchDoctorData = async () => {
+    //         try {
+    //             const response = await axiosInstance.get(`${baseURL}/api/appoint/book-appointment/${id}`);
+    //             console.log("response",response)
+    //             setDocInfo(response.data.doctor);
+    //             setDocSlots(response.data.slots);
+    //             setDisplayedSlots(response.data.slots.slice(0, slotsPerPage)); 
+    //         } catch (error) {
+    //             console.error('Error fetching doctor data:', error);
+    //         }
+    //     };
+
+    //     fetchDoctorData();
+    // }, [id, baseURL]);
+
     useEffect(() => {
         const fetchDoctorData = async () => {
             try {
                 const response = await axiosInstance.get(`${baseURL}/api/appoint/book-appointment/${id}`);
-                console.log("response",response)
+                console.log("response", response);
                 setDocInfo(response.data.doctor);
-                setDocSlots(response.data.slots);
-                setDisplayedSlots(response.data.slots.slice(0, slotsPerPage)); 
+    
+                // Get current date without time (midnight of today)
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // set to midnight for accurate comparison
+    
+                // Filter out slots that are before today
+                const futureSlots = response.data.slots.filter(slot => {
+                    const slotDate = new Date(slot.date);
+                    return slotDate >= today; // only include slots for today or future
+                });
+    
+                setDocSlots(futureSlots); // Set only future slots
+                setDisplayedSlots(futureSlots.slice(0, slotsPerPage)); // Show only filtered slots in pagination
             } catch (error) {
                 console.error('Error fetching doctor data:', error);
             }
         };
-
+    
         fetchDoctorData();
     }, [id, baseURL]);
+    
 
     const bookAppointment = async () => {
         if (!slotTime) {

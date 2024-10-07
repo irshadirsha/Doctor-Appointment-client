@@ -123,12 +123,12 @@ const DoctorAppointments = () => {
               ? <p className='text-red-400 text-xs font-medium'>Cancelled</p>
               : item.isCompleted
                 ? <p className='text-green-500 text-xs font-medium'>Completed</p>
-                : <div className='flex'>
+                : <div className='flex'> 
                   <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="Cancel" />
                   <img onClick={() => completeAppointment(item._id)} className='w-10 cursor-pointer' src={assets.tick_icon} alt="Complete" />
                 </div>
             }
-          </div>
+          </div>  
         ))}
       </div>
     </div>
